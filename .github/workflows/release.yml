@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Extract version from tag
+        id: version
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Set version in project
+        shell: pwsh
+        run: |
+          $csproj = "src/Eml2Html/Eml2Html.csproj"
+          $content = Get-Content $csproj -Raw
+          $content = $content -replace '<Version>.*?</Version>', "<Version>${{ steps.version.outputs.VERSION }}</Version>"
+          Set-Content $csproj $content
+
+      - name: Publish
+        run: dotnet publish src/Eml2Html/Eml2Html.csproj -c Release -o install/publish
+
+      - name: Build Installer
+        shell: pwsh
+        run: |
+          $env:EML2HTML_VERSION = "${{ steps.version.outputs.VERSION }}"
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" install/eml2html.iss
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: install/Output/eml2html-${{ steps.version.outputs.VERSION }}-setup.exe
+          generate_release_notes: true

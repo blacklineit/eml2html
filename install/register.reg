@@ -1,0 +1,24 @@
+Windows Registry Editor Version 5.00
+
+; eml2html - Shell extension for .eml files
+; NOTE: Update the path below to match your eml2html.exe install location.
+; Default: %LOCALAPPDATA%\eml2html\eml2html.exe
+
+; Flyout menu (SystemFileAssociations works regardless of default app)
+[HKEY_CURRENT_USER\Software\Classes\SystemFileAssociations\.eml\shell\eml2html]
+"MUIVerb"="eml2html"
+"SubCommands"=""
+
+; Extract to HTML
+[HKEY_CURRENT_USER\Software\Classes\SystemFileAssociations\.eml\shell\eml2html\shell\html]
+@="Extract to HTML"
+
+[HKEY_CURRENT_USER\Software\Classes\SystemFileAssociations\.eml\shell\eml2html\shell\html\command]
+@="\"%LOCALAPPDATA%\\eml2html\\eml2html.exe\" --mode html \"%1\""
+
+; Extract to Folder
+[HKEY_CURRENT_USER\Software\Classes\SystemFileAssociations\.eml\shell\eml2html\shell\folder]
+@="Extract to Folder"
+
+[HKEY_CURRENT_USER\Software\Classes\SystemFileAssociations\.eml\shell\eml2html\shell\folder\command]
+@="\"%LOCALAPPDATA%\\eml2html\\eml2html.exe\" --mode folder \"%1\""

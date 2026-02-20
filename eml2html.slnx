@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Eml2Html/Eml2Html.csproj" />
+  <Project Path="tests/TestSanitize.csproj" />
+</Solution>
