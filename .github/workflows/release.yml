@@ -47,7 +47,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 1 }
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: install/Output/eml2html-${{ steps.version.outputs.VERSION }}-setup.exe
           generate_release_notes: true
