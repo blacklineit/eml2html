@@ -38,7 +38,7 @@ public static class EmlParser
         var htmlBody = "";
 
         // Walk the MIME tree
-        var mimeIterator = new MimeIterator(message);
+        using var mimeIterator = new MimeIterator(message);
         while (mimeIterator.MoveNext())
         {
             switch (mimeIterator.Current)
